@@ -1,10 +1,30 @@
 
-struct TimeAxis{K,V,Ks,Vs,A} <: AbstractAxis{K,V,Ks,Vs}
+struct TimeAxis{K,V,Ks,Vs} <: AbstractAxis{K,V,Ks,Vs}
     axis::Axis{K,V,Ks,Vs}
-    annotations::A
+    annotations::Dict{Symbol,Interval{:closed,:closed,K}}
+
+    function TimeAxis{K,V,Ks,Vs}(
+        ks::Ks,
+        vs::Vs,
+        a::Dict{Symbol,Interval{:closed,:closed,K}}=Dict{Symbol,Interval{:closed,:closed,K}}()
+    ) where {K,V,Ks,Vs}
+        new{K,V,Ks,Vs}(Axis(ks, vs), a)
+    end
+
+    function TimeAxis(
+        axis::Axis{K,V,Ks,Vs},
+        a::Dict{Symbol,Interval{:closed,:closed,K}}=Dict{Symbol,Interval{:closed,:closed,K}}()
+    ) where {K,V,Ks,Vs}
+        return new{K,V,Ks,Vs}(axis, a)
+    end
 end
 
-function TimeAxis(keys::AbstractVector, values::AbstractUnitRange=OneTo(length(keys)), annotations=Dict{Symbol,Any}())
+function TimeAxis(
+    keys::AbstractVector{K},
+    values::AbstractUnitRange=OneTo(length(keys)),
+    annotations::Dict{Symbol,Interval{:closed,:closed,K}}=Dict{Symbol,Interval{:closed,:closed,K}}()
+) where {K}
+
     return TimeAxis(Axis(keys, values), annotations)
 end
 
@@ -15,15 +35,19 @@ Base.values(axis::TimeAxis) = values(getfield(axis, :axis))
 annotations(axis::TimeAxis) = getfield(axis, :annotations)
 
 function AxisIndices.similar_type(
-       t::TimeAxis{K,V,Ks,Vs,A},
+       ::TimeAxis{K,V,Ks,Vs},
        new_keys_type::Type=Ks,
        new_values_type::Type=Vs
-   ) where {K,V,Ks,Vs,A}
-       return TimeAxis{eltype(new_keys_type),eltype(new_values_type),new_keys_type,new_values_type,A}
+   ) where {K,V,Ks,Vs}
+       return TimeAxis{eltype(new_keys_type),
+                       eltype(new_values_type),
+                       new_keys_type,
+                       new_values_type}
 end
 
-function Base.similar(axis::TimeAxis, ks, vals, annotations)
-    return unsafe_reconstruct(axis, ks, vals, annotations)
+# TODO what should happen with annotations here?
+function AxisIndices.unsafe_reconstruct(axis::TimeAxis, ks, vs)
+    return similar_type(axis, typeof(ks), typeof(vs))(ks, vs, Dict{Symbol,Interval{:closed,:closed,eltype(ks)}}())  
 end
 
 function Base.setindex!(axis::TimeAxis, val, i::Symbol)

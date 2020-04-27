@@ -3,6 +3,7 @@ using TimeAxes
 using AxisIndices
 using Dates
 
+
 nia = NIArray(reshape(1:6, 2, 3), x = 2:3, time = 3.0:5.0)
 @test has_timedim(nia)
 @test @inferred(assert_timedim_last(nia))
@@ -22,6 +23,14 @@ nia = NIArray(reshape(1:6, 2, 3), x = 2:3, time = 3.0:5.0)
 
 t = TimeAxis(Second(1):Second(1):Second(10));
 
-t[:time_1] = Second(1):Second(1):Second(3);
+@test keys(t) == Second(1):Second(1):Second(10)
 
-@test t[:time_1] == 1:3
+t[:time_1] = Second(1)..Second(3)
+
+t2 = t[:time_1]
+
+@test values(t2) == 1:3
+@test keys(t2) == Second(1):Second(1):Second(3)
+
+@test !AxisIndices.is_element(TimeAxes.TimeAnnotation())
+

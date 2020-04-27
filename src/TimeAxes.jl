@@ -1,9 +1,12 @@
+
 module TimeAxes
 
 using AxisIndices
 using NamedDims
+using IntervalSets
 
 using Base: OneTo
+using AxisIndices: unsafe_reconstruct, similar_type
 
 export
     TimeAxis,
@@ -22,10 +25,12 @@ export
     duration,
     select_timedim,
     sampling_rate,
-    assert_timedim_last
+    assert_timedim_last,
+    ..
 
 include("timedim.jl")
 include("timeaxis.jl")
 
 
 end # module
+
