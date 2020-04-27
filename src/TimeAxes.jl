@@ -3,7 +3,10 @@ module TimeAxes
 using AxisIndices
 using NamedDims
 
+using Base: OneTo
+
 export
+    TimeAxis,
     # @defdim output
     is_time,
     timedim,
@@ -22,5 +25,7 @@ export
     assert_timedim_last
 
 include("timedim.jl")
+include("timeaxis.jl")
+
 
 end # module
