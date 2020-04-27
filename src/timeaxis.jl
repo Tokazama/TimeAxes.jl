@@ -47,7 +47,7 @@ end
 
 # TODO what should happen with annotations here?
 function AxisIndices.unsafe_reconstruct(axis::TimeAxis, ks, vs)
-    return similar_type(axis, typeof(ks), typeof(vs))(ks, vs, Dict{Symbol,Interval{:closed,:closed,eltype(ks)}}())  
+    return similar_type(axis, typeof(ks), typeof(vs))(ks, vs, annotations(axis))  
 end
 
 function Base.setindex!(axis::TimeAxis, val, i::Symbol)
