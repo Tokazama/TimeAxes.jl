@@ -28,7 +28,16 @@ t = TimeAxis(Second(1):Second(1):Second(10));
 t[:ts1] = Second(1)
 t[:ts2] = Second(3)
 
-t2 = t[:ts1..:ts2]
+@test AxisIndices.similar_type(t) <: typeof(t)
+@test TimeAxes.stamptype(t) <: Symbol
+@test TimeAxes.stamptype(typeof(t)) <: Symbol
+
+@test TimeAxes.check_timestamp(Second, Int, Symbol) == nothing
+@test_throws ErrorException TimeAxes.check_timestamp(Second, Int, Int)
+@test_throws ErrorException TimeAxes.check_timestamp(Second, Int, Second)
+
+
+t2 = @inferred(t[:ts1..:ts2])
 
 @test values(t2) == 1:3
 @test keys(t2) == Second(1):Second(1):Second(3)
@@ -39,3 +48,4 @@ if !(VERSION < v"1.4")
         doctest(TimeAxes)
     end
 end
+

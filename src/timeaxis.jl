@@ -1,4 +1,5 @@
 
+# TODO should checks go both ways to ensure keys aren't a subtype of timestamps' type(s)
 function check_timestamp(::Type{K}, ::Type{V}, ::Type{S}) where {K,V,S}
     if S <: K
         error("timetamps cannot be a subtype of axis keytype, got keytype(axis) == $K and stamptype(axis) == $S.")
