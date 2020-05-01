@@ -2,7 +2,7 @@ using Test
 using TimeAxes
 using AxisIndices
 using Dates
-
+using Documenter
 
 nia = NIArray(reshape(1:6, 2, 3), x = 2:3, time = 3.0:5.0)
 @test has_timedim(nia)
@@ -25,12 +25,17 @@ t = TimeAxis(Second(1):Second(1):Second(10));
 
 @test keys(t) == Second(1):Second(1):Second(10)
 
-t[:time_1] = Second(1)..Second(3)
+t[:ts1] = Second(1)
+t[:ts2] = Second(3)
 
-t2 = t[:time_1]
+t2 = t[:ts1..:ts2]
 
 @test values(t2) == 1:3
 @test keys(t2) == Second(1):Second(1):Second(3)
 
-@test !AxisIndices.is_element(TimeAxes.TimeAnnotation())
-
+# this avoids errors due to differences in how Symbols are printing between versions of Julia
+if !(VERSION < v"1.4")
+    @testset "docs" begin
+        doctest(TimeAxes)
+    end
+end
