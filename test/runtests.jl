@@ -23,6 +23,8 @@ nia = NIArray(reshape(1:6, 2, 3), x = 2:3, time = 3.0:5.0)
 
 t = TimeAxis(Second(1):Second(1):Second(10));
 
+@test t == TimeAxis(Second(1):Second(1):Second(10), Base.OneTo(10), Dict{Symbol,Second}())
+
 @test keys(t) == Second(1):Second(1):Second(10)
 
 t[:ts1] = Second(1)
