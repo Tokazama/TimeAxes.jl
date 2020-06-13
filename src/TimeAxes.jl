@@ -1,4 +1,3 @@
-
 module TimeAxes
 
 @doc let path = joinpath(dirname(@__DIR__), "README.md")
@@ -9,9 +8,12 @@ end TimeAxes
 using AxisIndices
 using NamedDims
 using IntervalSets
-
+using Reexport
 using Base: OneTo, Fix2, @propagate_inbounds
-using AxisIndices: unsafe_reconstruct, similar_type, AxisIndicesStyle, to_index
+using AxisIndices: unsafe_reconstruct, similar_type, AxisIndicesStyle
+using AxisIndices: to_axis, to_index, assign_indices
+
+using Base: tail
 
 export
     TimeAxis,
@@ -31,13 +33,14 @@ export
     select_timedim,
     sampling_rate,
     assert_timedim_last,
+    lag,
+    lead,
     ..
 
+@reexport using AxisIndices
 
 include("timedim.jl")
 include("timeaxis.jl")
 include("timestamps.jl")
 
-
 end # module
-

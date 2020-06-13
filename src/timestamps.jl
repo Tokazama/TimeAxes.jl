@@ -1,32 +1,37 @@
 
-struct TimeStamp <: AxisIndicesStyle end
+struct TimeStampIndex <: AxisIndicesStyle end
 
-AxisIndices.AxisIndicesStyle(::Type{<:TimeAxis}, ::Type{T}) where {T} = TimeStamp()
+AxisIndices.AxisIndicesStyle(::Type{<:TimeAxis}, ::Type{T}) where {T} = TimeStampIndex()
 
 #AxisIndices.is_element(::Type{TimeStamp}) = AxisIndices.is_element(S)
 
 @inline function _refunction(axis, arg::Interval{L,R,T}) where {L,R,T}
-    if T <: stamptype(axis)
-        return Interval{L,R}(stamps(axis)[arg.left], stamps(axis)[arg.right])
+    if T <: timestamp_type(axis)
+        return Interval{L,R}(to_timestamp(axis, arg.left), to_timestamp(axis, arg.right))
     else
         return arg
     end
 end
 
 @inline function _refunction(axis, arg::Fix2{F,T}) where {F,T}
-    if T <: stamptype(axis)
-        return arg.f(stamps(axis)[arg.x])
+    if T <: timestamp_type(axis)
+        return arg.f(to_timestamp(axis, arg.x))
     else
         return arg
     end
 end
 
+_refunction(axis, arg) = arg
 
-AxisIndices.to_index(S::TimeStamp, axis, arg) = _to_index(axis, arg)
+@propagate_inbounds function AxisIndices.to_index(S::TimeStampIndex, axis, arg)
+    return _to_index(axis, arg)
+end
 
-@propagate_inbounds _to_index(axis, arg) = to_index(axis.axis, _refunction(axis, arg))
+@propagate_inbounds function  _to_index(axis, arg)
+    return to_index(axis.axis, _refunction(axis, arg))
+end
 
-@inline function AxisIndices.to_keys(::TimeStamp, axis, arg, index)
+@inline function AxisIndices.to_keys(::TimeStampIndex, axis, arg, index)
     return AxisIndices.to_keys(axis.axis, _refunction(axis, arg), index)
 end
 

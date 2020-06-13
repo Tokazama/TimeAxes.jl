@@ -1,5 +1,5 @@
 
-using Documenter, TimeAxes, Dates, AxisIndices
+using Documenter, TimeAxes, Dates, AxisIndices, Unitful
 
 makedocs(;
     modules=[TimeAxes],
@@ -12,6 +12,4 @@ makedocs(;
     authors="Zachary P. Christensen",
 )
 
-deploydocs(
-    repo = "github.com/Tokazama/TimeAxes.jl.git",
-)
+deploydocs(repo = "github.com/Tokazama/TimeAxes.jl.git")

@@ -6,7 +6,7 @@
 This package utilizes AxisIndices to interface with data that has a time axis.
 
 ```julia
-julia> using AxisIndices, TimeAxes, Dates
+julia> using TimeAxes, Dates
 
 julia> t = TimeAxis(Second(1):Second(1):Second(10))
 TimeAxis(1 second:1 second:10 seconds => Base.OneTo(10))
@@ -24,10 +24,10 @@ TimeAxis(1 second:1 second:3 seconds => 1:3)
 julia> t[>(:ts2)] == t[>(Second(3))]  # all time points above :ts2 and 3 seconds returns the same thing
 true
 
-julia> x = AxisIndicesArray(ones(10, 2), t)
-AxisIndicesArray{Float64,2,Array{Float64,2}...}
- • dim_1 - TimeAxis(1 second:1 second:10 seconds => Base.OneTo(10))
- • dim_2 - SimpleAxis(Base.OneTo(2))
+julia> x = AxisArray(ones(10, 2), t)
+10×2 AxisArray{Float64,2}
+ • dim_1 - 1 second:1 second:10 seconds
+ • dim_2 - 1:2
                  1     2
     1 second   1.0   1.0
    2 seconds   1.0   1.0
@@ -41,9 +41,9 @@ AxisIndicesArray{Float64,2,Array{Float64,2}...}
   10 seconds   1.0   1.0
 
 julia> x[:ts1..:ts2,:]
-AxisIndicesArray{Float64,2,Array{Float64,2}...}
- • dim_1 - TimeAxis(1 second:1 second:3 seconds => Base.OneTo(3))
- • dim_2 - SimpleAxis(Base.OneTo(2))
+3×2 AxisArray{Float64,2}
+ • dim_1 - 1 second:1 second:3 seconds
+ • dim_2 - 1:2
                 1     2
    1 second   1.0   1.0
   2 seconds   1.0   1.0
