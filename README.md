@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.com/Tokazama/TimeAxes.jl.svg?branch=master)](https://travis-ci.com/Tokazama/TimeAxes.jl)
 [![codecov](https://codecov.io/gh/Tokazama/TimeAxes.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/Tokazama/TimeAxes.jl)
+[![stable-docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://Tokazama.github.io/TimeAxes.jl/stable)
+[![dev-docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://Tokazama.github.io/TimeAxes.jl/dev)
 
 This package utilizes AxisIndices to interface with data that has a time axis.
 

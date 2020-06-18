@@ -1,7 +1,7 @@
 name = "TimeAxes"
 uuid = "9a9fc9a6-283d-47e9-a2f6-b3a44e559ea3"
 authors = ["Zachary P. Christensen <zchristensen7@gmail.com>"]
-version = "0.1.1"
+version = "0.2.0"
 
 [deps]
 AxisIndices = "f52c9ee2-1b1c-4fd8-8546-6350938c7f11"

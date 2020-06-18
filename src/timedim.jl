@@ -18,21 +18,25 @@ First time point along the time axis.
 onset(x) = first(time_keys(x))
 
 """
+    time_step(x)
+
+The time step/interval between each element.
+"""
+time_step(x) = step(time_keys(x))
+
+"""
     duration(x)
 
 Duration of the event along the time axis.
 """
-function duration(x)
-    out = time_end(x) - onset(x)
-    return out + oneunit(out)
-end
+duration(x) = time_end(x) - onset(x) + time_step(x)
 
 """
     sampling_rate(x)
 
 Number of samples per second.
 """
-sampling_rate(x) = 1 / step(time_keys(x))
+sampling_rate(x) = 1 / time_step(x)
 
 """
     assert_timedim_last(x)
@@ -63,8 +67,8 @@ julia> A = NamedAxisArray{(:time,)}(collect(1:5), (1:5)s)
   5 s   5
 
 julia> lead(A, 1)
-4-element AxisArray{Int64,1}
- • dim_1 - 1 s:1 s:4 s
+4-element NamedAxisArray{Int64,1}
+ • time - 1 s:1 s:4 s
 
   1 s   2
   2 s   3
@@ -96,8 +100,8 @@ julia> A = NamedAxisArray{(:time,)}(collect(1:5), (1:5)s)
   5 s   5
 
 julia> lag(A, 1)
-4-element AxisArray{Int64,1}
- • dim_1 - 2 s:1 s:5 s
+4-element NamedAxisArray{Int64,1}
+ • time - 2 s:1 s:5 s
 
   2 s   1
   3 s   2
@@ -112,7 +116,10 @@ lag(A::AbstractArray, n::Int) = _lag(A, timedim(A), n)
 ###
 ### lead
 ###
-_lead(A::NamedAxisArray, dim::Int, n::Int)= _lead(parent(A), dim, n)
+function _lead(A::NamedAxisArray, dim::Int, n::Int)
+    return NamedDimsArray{dimnames(A)}(_lead(parent(A), dim, n))
+end
+
 function _lead(A::AxisArray{T,N}, dim::Int, n::Int) where {T,N}
     axs = axes(A)
     p = parent(A)[_lead_indices(axs, dim, n)...]
@@ -159,7 +166,9 @@ end
 ###
 ### lags
 ###
-_lag(A::NamedAxisArray, dim::Int, n::Int)= _lag(parent(A), dim, n)
+function _lag(A::NamedAxisArray, dim::Int, n::Int)
+    return NamedDimsArray{dimnames(A)}(_lag(parent(A), dim, n))
+end
 function _lag(A::AxisArray{T,N}, dim::Int, n::Int) where {T,N}
     axs = axes(A)
     p = parent(A)[_lag_indices(axs, dim, n)...]
