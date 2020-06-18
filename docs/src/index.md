@@ -22,12 +22,30 @@ One could use the time axis for iteration...
 julia> sum([A[i] for i in axes(A, 1)])
 5050
 
+julia> sum([A[time=i] for i in time_axis(A)])
+5050
+
 ```
 
 
 ...or windows of the time axis.
 ```jldoctest doc_examples
 julia> A2 = sum([A[i] for i in AxisIterator(axes(A, 1), 10)])
+10-element NamedAxisArray{Int64,1}
+ • time - 1 s:1 s:10 s
+
+   1 s   460
+   2 s   470
+   3 s   480
+   4 s   490
+   5 s   500
+   6 s   510
+   7 s   520
+   8 s   530
+   9 s   540
+  10 s   550
+
+julia> sum([A[time=i] for i in time_axis(A, 10)])
 10-element NamedAxisArray{Int64,1}
  • time - 1 s:1 s:10 s
 
@@ -59,7 +77,6 @@ julia> lag(A2, 1)
    8 s   520
    9 s   530
   10 s   540
-
 
 julia> lead(A2, 1)
 9-element NamedAxisArray{Int64,1}
