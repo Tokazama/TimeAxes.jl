@@ -4,7 +4,9 @@ authors = ["Zachary P. Christensen <zchristensen7@gmail.com>"]
 version = "0.2.0"
 
 [deps]
+AbstractFFTs = "621f4979-c628-5d54-868e-fcf4e3e8185c"
 AxisIndices = "f52c9ee2-1b1c-4fd8-8546-6350938c7f11"
+FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
 IntervalSets = "8197267c-284f-5f27-9208-e0e47529a953"
 NamedDims = "356022a1-0364-5f58-8944-0da4b18d706f"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
@@ -15,7 +17,6 @@ IntervalSets = "0.4, 0.5"
 NamedDims = "0.2"
 Reexport = "0.2"
 julia = "1"
-
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

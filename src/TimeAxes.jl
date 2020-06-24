@@ -6,6 +6,8 @@ module TimeAxes
 end TimeAxes
 
 using AxisIndices
+using FFTW
+using AbstractFFTs
 using NamedDims
 using IntervalSets
 using Reexport
@@ -42,5 +44,6 @@ export
 include("timedim.jl")
 include("timeaxis.jl")
 include("timestamps.jl")
+include("fft.jl")
 
 end # module
