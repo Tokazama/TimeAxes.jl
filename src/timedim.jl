@@ -1,7 +1,20 @@
 
 Base.@pure is_time(x::Symbol) = (x === :time) || (x === :Time)
 
-AxisIndices.@defdim time is_time
+AxisIndices.@defdim(time, is_time, false)
+
+"""
+    ntime(x) -> Int
+
+Returns the size along the dimension corresponding to the time. Defaults to 1
+"""
+@inline function ntime(x)
+    if has_timedim(x)
+        return size(x, timedim(x))
+    else
+        return 1
+    end
+end
 
 """
     time_end(x)
@@ -43,8 +56,18 @@ sampling_rate(x) = 1 / time_step(x)
 
 Throw an error if the `x` has a time dimension that is not the last dimension.
 """
-@inline assert_timedim_last(x) = is_time(last(dimnames(x)))
+@inline function assert_timedim_last(x::AbstractArray{T,N}) where {T,N}
+    if has_timedim(x)
+        if timedim(x) === N
+            return nothing
+        else
+            error("time dimension is not last")
+        end
 
+    else
+        return nothing
+    end
+end
 
 """
     lead(A::AbstractArray, n::Integer)
@@ -205,4 +228,3 @@ end
         return to_axis(axis, keys(axis)[(firstindex(axis) + n):lastindex(axis)], newinds)
     end
 end
-

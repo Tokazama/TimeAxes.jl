@@ -25,7 +25,7 @@ fft_axes(fxn::Function, axs::Tuple{}, inds::Tuple{}, dims::Tuple{}, cnt::Int=1) 
 ###
 fft_name(fxn::Function, dname::Symbol) = dname  # default is to do nothing
 @inline function fft_names(fxn::Function, dnames::NTuple{N,Symbol}, dims::Tuple{Vararg{Int}}) where {N}
-    ntuple(Val) do i
+    ntuple(Val(N)) do i
         if i in dims
             fft_name(fxn, getfield(dnames, i))
         else
@@ -38,18 +38,22 @@ end
 for f in (:fft, :ifft, :bfft)
     @eval begin
         function AbstractFFTs.$f(A::AbstractAxisArray, dims)
-            p = AbstractFFTs.$f(p, dims)
+            p = AbstractFFTs.$f(parent(A), dims)
             axs = fft_axes(AbstractFFTs.$f, axes(A), axes(p), dims)
             return unsafe_reconstruct(A, p, axs)
         end
 
-        function AbstractFFTs.$f(A::NamedAxisArray, dims)
-            return AbstractFFTs.$f(A, NamedDims.dims(dimnames(A), dims))
+        function AbstractFFTs.$f(A::NamedDimsArray, dims::Union{Symbol,Integer})
+            return AbstractFFTs.$f(A, (NamedDims.dim(dimnames(A), dims),))
         end
 
-        function AbstractFFTs.$f(A::NamedDimsArray, dims::Tuple{Vararg{<:Integer}})
-            dn = fft_names(AbstractFFTs.$f, dimnames(A), dims)
-            return NamedDimsArray{dn}(AbstractFFTs.$f(parent(A), dims))
+        function AbstractFFTs.$f(A::NamedDimsArray, dims::Tuple)
+            if dims isa Tuple{Vararg{<:Integer}}
+                dn  = fft_names(AbstractFFTs.$f, dimnames(A), dims)
+                return NamedDimsArray{dn}(AbstractFFTs.$f(parent(A), dims))
+            else
+                return AbstractFFTs.$f(A, (NamedDims.dims(dimnames(A), dims),))
+            end
         end
 
         function AbstractFFTs.$f(A::NamedDimsArray{L,T,N}) where {L,T,N}
@@ -65,18 +69,22 @@ end
 for f in (:dct, :idct)
     @eval begin
         function FFTW.$f(A::AbstractAxisArray, dims)
-            p = FFTW.$f(p, dims)
-            axs = fft_axes(AbstractFFTs.$f, axes(A), axes(p), dims)
+            p = FFTW.$f(parent(A), dims)
+            axs = fft_axes(FFTW.$f, axes(A), axes(p), dims)
             return unsafe_reconstruct(A, p, axs)
         end
 
-        function FFTW.$f(A::NamedAxisArray, dims)
-            return FFTW.$f(A, NamedDims.dims(dimnames(A), dims))
+        function FFTW.$f(A::NamedDimsArray, dims::Union{Symbol,Integer})
+            return FFTW.$f(A, (NamedDims.dim(dimnames(A), dims),))
         end
 
-        function FFTW.$f(A::NamedDimsArray, dims::Tuple{Vararg{<:Integer}})
-            dn = fft_names(AbstractFFTs.$f, dimnames(A), dims)
-            return NamedDimsArray{dn}(FFTW.$f(parent(A), dims))
+        function FFTW.$f(A::NamedDimsArray, dims::Tuple)
+            if dims isa Tuple{Vararg{<:Integer}}
+                dn  = fft_names(FFTW.$f, dimnames(A), dims)
+                return NamedDimsArray{dn}(FFTW.$f(parent(A), dims))
+            else
+                return FFTW.$f(A, (NamedDims.dim(dimnames(A), dims),))
+            end
         end
 
         function FFTW.$f(A::NamedDimsArray{L,T,N}) where {L,T,N}
