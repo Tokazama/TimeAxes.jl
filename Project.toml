@@ -13,6 +13,8 @@ Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 
 [compat]
 AxisIndices = "0.4"
+AbstractFFTs = "0.5"
+FFTW = "1"
 IntervalSets = "0.4, 0.5"
 NamedDims = "0.2"
 Reexport = "0.2"
