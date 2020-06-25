@@ -1,7 +1,7 @@
 name = "TimeAxes"
 uuid = "9a9fc9a6-283d-47e9-a2f6-b3a44e559ea3"
 authors = ["Zachary P. Christensen <zchristensen7@gmail.com>"]
-version = "0.2.0"
+version = "0.2.1"
 
 [deps]
 AbstractFFTs = "621f4979-c628-5d54-868e-fcf4e3e8185c"

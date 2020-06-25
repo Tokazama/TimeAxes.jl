@@ -49,12 +49,19 @@ t2 = @inferred(t[:ts1..:ts2])
 @testset "fft-tests" begin
     A = reshape(1:6, 2, 3)
     A_named_axes = NamedAxisArray(A, x = 2:3, time = 3.0:5.0)
+    A_named_axes_no_time = NamedAxisArray(A, x = 2:3, y = 3.0:5.0)
+
 
     @testset "fft" begin
         A_fft = TimeAxes.fft(A, 2)
         A_named_axes_fft = TimeAxes.fft(A_named_axes, 2)
         @test A_fft == A_named_axes_fft
         @test typeof(A_named_axes_fft) <: NamedAxisArray{(:x, :time)}
+
+        A_fft = TimeAxes.fft(A)
+        A_named_axes_no_time_fft = TimeAxes.fft(A_named_axes_no_time)
+        @test A_fft == A_named_axes_no_time_fft
+        @test typeof(A_named_axes_no_time_fft) <: NamedAxisArray{(:x, :y)}
     end
 
     @testset "ifft" begin
@@ -62,6 +69,11 @@ t2 = @inferred(t[:ts1..:ts2])
         A_named_axes_ifft = TimeAxes.ifft(A_named_axes, 2)
         @test A_ifft == A_named_axes_ifft
         @test typeof(A_named_axes_ifft) <: NamedAxisArray{(:x, :time)}
+
+        A_fft = TimeAxes.ifft(A)
+        A_named_axes_no_time_fft = TimeAxes.ifft(A_named_axes_no_time)
+        @test A_fft == A_named_axes_no_time_fft
+        @test typeof(A_named_axes_no_time_fft) <: NamedAxisArray{(:x, :y)}
     end
 
     @testset "bfft" begin
@@ -69,6 +81,11 @@ t2 = @inferred(t[:ts1..:ts2])
         A_named_axes_bfft = TimeAxes.bfft(A_named_axes, 2)
         @test A_bfft == A_named_axes_bfft
         @test typeof(A_named_axes_bfft) <: NamedAxisArray{(:x, :time)}
+
+        A_fft = TimeAxes.bfft(A)
+        A_named_axes_no_time_fft = TimeAxes.bfft(A_named_axes_no_time)
+        @test A_fft == A_named_axes_no_time_fft
+        @test typeof(A_named_axes_no_time_fft) <: NamedAxisArray{(:x, :y)}
     end
 
     @testset "dct" begin
@@ -76,6 +93,11 @@ t2 = @inferred(t[:ts1..:ts2])
         A_named_axes_dct = TimeAxes.dct(A_named_axes, 2)
         @test A_dct == A_named_axes_dct
         @test typeof(A_named_axes_dct) <: NamedAxisArray{(:x, :time)}
+
+        A_fft = TimeAxes.dct(A)
+        A_named_axes_no_time_fft = TimeAxes.dct(A_named_axes_no_time)
+        @test A_fft == A_named_axes_no_time_fft
+        @test typeof(A_named_axes_no_time_fft) <: NamedAxisArray{(:x, :y)}
     end
 
     @testset "idct" begin
@@ -83,6 +105,11 @@ t2 = @inferred(t[:ts1..:ts2])
         A_named_axes_idct = TimeAxes.idct(A_named_axes, 2)
         @test A_idct == A_named_axes_idct
         @test typeof(A_named_axes_idct) <: NamedAxisArray{(:x, :time)}
+
+        A_fft = TimeAxes.idct(A)
+        A_named_axes_no_time_fft = TimeAxes.idct(A_named_axes_no_time)
+        @test A_fft == A_named_axes_no_time_fft
+        @test typeof(A_named_axes_no_time_fft) <: NamedAxisArray{(:x, :y)}
     end
 end
 
