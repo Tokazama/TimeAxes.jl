@@ -114,7 +114,7 @@ t2 = @inferred(t[:ts1..:ts2])
 end
 
 # this avoids errors due to differences in how Symbols are printing between versions of Julia
-if !(VERSION < v"1.4")
+if !(VERSION < v"1.5")
     @testset "docs" begin
         doctest(TimeAxes)
     end
