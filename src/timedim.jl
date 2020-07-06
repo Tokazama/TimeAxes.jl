@@ -56,9 +56,9 @@ sampling_rate(x) = 1 / time_step(x)
 
 Throw an error if the `x` has a time dimension that is not the last dimension.
 """
-@inline function assert_timedim_last(x::AbstractArray{T,N}) where {T,N}
+@inline function assert_timedim_last(x::T) where {T}
     if has_timedim(x)
-        if timedim(x) === N
+        if timedim(x) === ndims(T)
             return nothing
         else
             error("time dimension is not last")
