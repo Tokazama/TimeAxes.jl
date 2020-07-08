@@ -5,6 +5,7 @@ using AxisIndices
 using Dates
 using Documenter
 using Unitful
+using Unitful: s
 
 nia = NamedAxisArray(reshape(1:6, 2, 3), x = 2:3, time = 3.0:5.0)
 @test has_timedim(nia)
@@ -45,6 +46,55 @@ t2 = @inferred(t[:ts1..:ts2])
 
 @test values(t2) == 1:3
 @test keys(t2) == Second(1):Second(1):Second(3)
+
+@testset "lead" begin
+    A = [1 2 3; 4 5 6; 7 8 9]
+    A_axes = AxisArray(A,(1:3, (1:3)s));
+    A_named_axes = NamedAxisArray{(:time,:_)}(A, (1:3, (1:3)s))
+
+    @testset "Array" begin
+        @test @inferred(lead(A, 1, 1)) == [4 5 6; 7 8 9]
+        @test @inferred(lead(A, 1, 2)) == [2 3; 5 6; 8 9]
+    end
+
+    @testset "AxisArray" begin
+        @test @inferred lead(A_axes, 1, 1) == [4 5 6; 7 8 9]
+        @test @inferred(lead(A_axes, 1, 2)) == [2 3; 5 6; 8 9]
+    end
+
+    @testset "NamedAxisArray" begin
+        @test @inferred lead(A_named_axes, 1, 1) == [4 5 6; 7 8 9]
+        @test @inferred(lead(A_named_axes, 1, 2)) == [2 3; 5 6; 8 9]
+    end
+    # this has a mutable axis and therefore it needs to handle this in a type
+    # stable way when recreating the axes
+    @test lead(NamedAxisArray{(:time,)}(collect(1:5), (1:5)s), 1) == [2, 3, 4, 5]
+end
+
+
+@testset "lag" begin
+    A = [1 2 3; 4 5 6; 7 8 9]
+    A_axes = AxisArray(A,(1:3, (1:3)s));
+    A_named_axes = NamedAxisArray{(:time,:_)}(A, (1:3, (1:3)s))
+
+    @testset "Array" begin
+        @test @inferred(lag(A, 1, 1)) == [1 2 3; 4 5 6]
+        @test @inferred(lag(A, 1, 2)) == [1 2; 4 5; 7 8]
+    end
+
+    @testset "AxisArray" begin
+        @test @inferred(lag(A_axes, 1, 1)) == [1 2 3; 4 5 6]
+        @test @inferred(lag(A_axes, 1, 2)) == [1 2; 4 5; 7 8]
+    end
+
+    @testset "NamedAxisArray" begin
+        @test @inferred(lag(A_named_axes, 1, 1)) == [1 2 3; 4 5 6]
+        @test @inferred(lag(A_named_axes, 1, 2)) == [1 2; 4 5; 7 8]
+    end
+    # this has a mutable axis and therefore it needs to handle this in a type
+    # stable way when recreating the axes
+    @test lag(NamedAxisArray{(:time,)}(collect(1:5), (1:5)s), 1) == [1, 2, 3, 4]
+end
 
 @testset "fft-tests" begin
     A = reshape(1:6, 2, 3)

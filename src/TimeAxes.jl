@@ -41,7 +41,10 @@ export
 
 @reexport using AxisIndices
 
+include("utils.jl")
 include("timedim.jl")
+include("lead.jl")
+include("lag.jl")
 include("timeaxis.jl")
 include("timestamps.jl")
 include("fft.jl")
