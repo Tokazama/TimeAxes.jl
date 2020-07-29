@@ -16,7 +16,7 @@ nia = NamedAxisArray(reshape(1:6, 2, 3), x = 2:3, time = 3.0:5.0)
 @test @inferred(ntime(nia)) == 3
 @test @inferred(time_indices(nia)) == 1:3
 @test @inferred(timedim(nia)) == 2
-@test @inferred(select_timedim(nia, 2)) == selectdim(parent(parent(nia)), 2, 2)
+@test @inferred(select_time(nia, 2)) == selectdim(parent(parent(nia)), 2, 2)
 @test @inferred(time_axis_type(nia)) <: Float64
 @test @inferred(time_end(nia)) == 5.0
 @test @inferred(onset(nia)) == 3.0

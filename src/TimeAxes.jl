@@ -32,7 +32,7 @@ export
     time_end,
     onset,
     duration,
-    select_timedim,
+    select_time,
     sampling_rate,
     assert_timedim_last,
     lag,

@@ -1,9 +1,9 @@
 
 @inline function _noshift_axis(axis::A, inds::I) where {A,I}
     if is_indices_axis(axis)
-        return to_axis(axis, nothing, inds, false, AxisIndices.Interface.Staticness(axis))
+        return to_axis(axis, nothing, inds, false)
     else
-        return to_axis(axis, keys(axis), inds, false, AxisIndices.Interface.Staticness(axis))
+        return to_axis(axis, keys(axis), inds, false)
     end
 end
 
@@ -19,7 +19,6 @@ end
             nothing,
             parent_index,
             false,
-            AxisIndices.Interface.Staticness(axis)
         )
     else
         return to_axis(
@@ -27,7 +26,6 @@ end
             @inbounds(keys(axis)[indexing_index]),
             parent_index,
             false,
-            AxisIndices.Interface.Staticness(axis)
         )
     end
 end
